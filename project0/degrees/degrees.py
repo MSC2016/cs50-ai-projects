@@ -62,10 +62,29 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = person_id_for_name(input("Name: "))
+
+    ################################################################
+    #                                                              #
+    #        DONT FORGET TO RESTORE MAIN() BEFORE SUBMITTING       #
+    #                                                              #
+    ################################################################
+
+
+    #source = person_id_for_name(input("Name: "))
+    source = "Cary Elwes"
+    source = "tom cruise"
+    #source = "emma watson"
+    print(f"\n\nsource is {source}")
+    
+
     if source is None:
         sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
+
+
+    #target = person_id_for_name(input("Name: "))
+    target = "Demi Moore"
+    print(f"target is {target}\n\n")
+
     if target is None:
         sys.exit("Person not found.")
 
@@ -92,8 +111,60 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    # Initialize start node to source and frontier
+    start = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # variable that stores all possible paths
+    paths = {}
+
+    # variable that stores nodes we already checked
+    already_checked_ids = set()
+
+    while True:
+        # break if there are no more options to explore
+        if frontier.empty():
+            break
+
+        # pull one node from the frontier 
+        node = frontier.remove()
+        
+        # get the person_id from the selected node
+        person_id = person_id_for_name(node.state.lower())
+
+        # add that node to the already checked list
+        already_checked_ids.add(person_id)
+
+        # get the movies the person participated in, 
+        movies_stared_by_person = people[person_id]['movies']
+
+        # abort this iteration if the person hasnt participated in any movies
+        if len(movies_stared_by_person) == 0:
+            print("if you didnt chose emma watson and you are seeing this, you messed up")
+            continue
+
+        # get everybody else that participated in that/those movie(s)
+        # and add enlarge the frontier
+        for movie in movies_stared_by_person:
+            stars_ids = movies[movie]['stars']
+
+            ## probably mesing up ---
+            ## check print's - this is where i want to create nodes
+            
+            for star_id in stars_ids:
+                yet_another_star_id_check = sel()
+                if star_id not in already_checked_ids:
+                    star_name = people[star_id]["name"]
+                    new_node = Node(state=star_name, parent=node, action=None)
+                    frontier.add(new_node)
+                    print(f"checking {star_name}")
+
+
+
+
+
+    raise Exception("OOOps, something went wrong... you were not suposed to see this...")
 
 
 def person_id_for_name(name):
