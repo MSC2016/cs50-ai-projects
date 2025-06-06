@@ -62,29 +62,10 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-
-    ################################################################
-    #                                                              #
-    #        DONT FORGET TO RESTORE MAIN() BEFORE SUBMITTING       #
-    #                                                              #
-    ################################################################
-
-
-    #source = person_id_for_name(input("Name: "))
-    source = "Cary Elwes"
-    source = "tom cruise"
-    #source = "emma watson"
-    print(f"\n\nsource is {source}")
-    
-
+    source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-
-
-    #target = person_id_for_name(input("Name: "))
-    target = "Demi Moore"
-    print(f"target is {target}\n\n")
-
+    target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
@@ -110,61 +91,60 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    # return an empty list if source equals target
+    if source == target:
+        return []
 
-    # Initialize start node to source and frontier
-    start = Node(state=source, parent=None, action=None)
+    # Check if source and target acted together in some movie and return it
+    common_movies = people[source]["movies"] & people[target]["movies"]
+    if common_movies:
+        return [(next(iter(common_movies)), target)]
+    
+    # initialize the frontier and add the start node
     frontier = QueueFrontier()
-    frontier.add(start)
+    start_node = Node(state=source, parent=None, action=None)
+    frontier.add(start_node)
 
-    # variable that stores all possible paths
-    paths = {}
+    # initialize already checked id's set
+    explored = {source}
 
-    # variable that stores nodes we already checked
-    already_checked_ids = set()
+    # begin the bfs search loop
+    while not frontier.empty():
 
-    while True:
-        # break if there are no more options to explore
-        if frontier.empty():
-            break
-
-        # pull one node from the frontier 
+        # get one node from the frontier
         node = frontier.remove()
-        
-        # get the person_id from the selected node
-        person_id = person_id_for_name(node.state.lower())
 
-        # add that node to the already checked list
-        already_checked_ids.add(person_id)
+        # get neighbours for person filtering out current person_id
+        neighbors = {
+            (movie_id, person_id)
+            for movie_id, person_id in neighbors_for_person(node.state)
+            if person_id != node.state
+        }
 
-        # get the movies the person participated in, 
-        movies_stared_by_person = people[person_id]['movies']
-
-        # abort this iteration if the person hasnt participated in any movies
-        if len(movies_stared_by_person) == 0:
-            print("if you didnt chose emma watson and you are seeing this, you messed up")
-            continue
-
-        # get everybody else that participated in that/those movie(s)
-        # and add enlarge the frontier
-        for movie in movies_stared_by_person:
-            stars_ids = movies[movie]['stars']
-
-            ## probably mesing up ---
-            ## check print's - this is where i want to create nodes
+        print(neighbors)
+        for movie_id, person_id in neighbors:
             
-            for star_id in stars_ids:
-                yet_another_star_id_check = sel()
-                if star_id not in already_checked_ids:
-                    star_name = people[star_id]["name"]
-                    new_node = Node(state=star_name, parent=node, action=None)
-                    frontier.add(new_node)
-                    print(f"checking {star_name}")
+            # discard person_id, if it's already in the explored set
+            if person_id in explored:
+                continue
 
+            # create one node for each valid connection
+            child_node = Node(state=person_id, parent=node, action=movie_id)
 
+            # check if we are on target
+            if person_id == target:
+                path = []
+                while child_node.parent is not None:
+                    path.append((child_node.action, child_node.state))
+                    child_node = child_node.parent
+                path.reverse()
+                return path
+            
+            # add the node to the frontier and explored set
+            frontier.add(child_node)
+            explored.add(person_id)
 
-
-
-    raise Exception("OOOps, something went wrong... you were not suposed to see this...")
+    return None
 
 
 def person_id_for_name(name):
