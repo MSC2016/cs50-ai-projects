@@ -121,7 +121,7 @@ def shortest_path(source, target):
             if person_id != node.state
         }
 
-        print(neighbors)
+        # iterate trough all neighbours
         for movie_id, person_id in neighbors:
             
             # discard person_id, if it's already in the explored set
@@ -134,6 +134,7 @@ def shortest_path(source, target):
             # check if we are on target
             if person_id == target:
                 path = []
+                # rebuild the path
                 while child_node.parent is not None:
                     path.append((child_node.action, child_node.state))
                     child_node = child_node.parent
