@@ -23,7 +23,7 @@ def player(board):
     Returns player who has the next turn on a board.
     """
 
-    #initializa variables to count the amount of moves for each player
+    #initializa variables to hold count of X and O moves
     x_count = 0
     o_count = 0
 
