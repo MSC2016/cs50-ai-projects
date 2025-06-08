@@ -22,8 +22,21 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    print(board)
-    raise NotImplementedError
+
+    #initializa variabled to count the amount of moves each player has done
+    x_count = 0
+    o_count = 0
+
+    # iterate trough the board and count the amount of X and O moves
+    for x in range(len(board)):
+        for y in range(len(board)):
+            if board[x][y] == X:
+                x_count += 1
+            if board[x][y] == O:
+                o_count += 1
+    
+    print(" It's ", O if x_count > o_count else X, "'s turn to play")
+    return O if x_count > o_count else X
 
 
 def actions(board):
@@ -44,9 +57,22 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
+    board = [[X, O, O],
+             [EMPTY, X, O],
+             [EMPTY, EMPTY, X]]
+    
+    
+    # iterate trough the grid
+    vertical = None
+    for x in range(len(board)):
+        for y in range(len(board)):
+            pass
 
 
-    raise NotImplementedError
+
+
+    print(board)
+    return None
 
 
 def terminal(board):

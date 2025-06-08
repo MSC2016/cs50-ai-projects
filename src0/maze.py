@@ -214,9 +214,9 @@ class Maze():
                     fill=fill
                 )
 
-        code_path = r"C:\Users\Migue\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+        code_path = "/mnt/c/Users/Migue/AppData/Local/Programs/Microsoft VS Code/Code.exe"
         img.save(filename)
-        subprocess.run([code_path,filename])
+        subprocess.run(["code", "--reuse-window", filename])
 
 
 if len(sys.argv) != 2:
