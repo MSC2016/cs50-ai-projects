@@ -22,6 +22,7 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
+    print(board)
     raise NotImplementedError
 
 
@@ -43,6 +44,8 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
+
+
     raise NotImplementedError
 
 
@@ -50,7 +53,19 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
+    # if one of the players has won, return true (Game Over)
+    if winner(board) != None:
+        return True
+
+    #iterate trough all positions in all lines and 
+    # return false if there is still empty positions
+    for line in board:
+        for position in line:
+            if position == EMPTY:
+                return False
+            
+    #If there is no winner, and all positions are occupied return True(Game Over)
+    return True
 
 
 def utility(board):

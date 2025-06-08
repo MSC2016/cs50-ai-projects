@@ -1,4 +1,5 @@
 import sys
+import subprocess
 
 class Node():
     def __init__(self, state, parent, action):
@@ -124,7 +125,8 @@ class Maze():
 
         # Initialize frontier to just the starting position
         start = Node(state=self.start, parent=None, action=None)
-        frontier = StackFrontier()
+        frontier = QueueFrontier()
+        #frontier = StackFrontier()
         frontier.add(start)
 
         # Initialize an empty explored set
@@ -212,7 +214,9 @@ class Maze():
                     fill=fill
                 )
 
+        code_path = r"C:\Users\Migue\AppData\Local\Programs\Microsoft VS Code\Code.exe"
         img.save(filename)
+        subprocess.run([code_path,filename])
 
 
 if len(sys.argv) != 2:
