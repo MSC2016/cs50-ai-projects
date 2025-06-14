@@ -2,7 +2,7 @@
 Tic Tac Toe Player
 """
 
-import math, copy
+import math, copy, random
 
 X = "X"
 O = "O"
@@ -23,7 +23,7 @@ def player(board):
     Returns player who has the next turn on a board.
     """
 
-    #initializa variables to hold count of X and O moves
+    # initializa variables to hold count of X and O moves
     x_count = 0
     o_count = 0
 
@@ -51,7 +51,7 @@ def actions(board):
     for x in range(3):
         for y in range(3):
             if board[x][y] == EMPTY:
-                actions.add(x,y)
+                actions.add((x,y))
 
     return actions
 
@@ -60,6 +60,19 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
+
+    # raise exception if action is None
+    if action == None:
+        raise Exception('There are no possible actions')
+    
+    # raise exception if action is out of bounds
+    if action[0] < 0 or action[0] < 0 or action[0] > 2 or action[1] > 2:
+        raise Exception('Action out of bounds')
+    
+    # raise exception if action points to a 'busy' cell
+    if board[action[0]][action[1]] is not None:
+        raise Exception('Can not overwrite this cell')
+    
     # create a deepcopy of the board
     updated_board = copy.deepcopy(board)
 
@@ -115,14 +128,14 @@ def terminal(board):
     if winner(board) != None:
         return True
 
-    #iterate trough all positions in all lines and 
+    # iterate trough all positions in all lines and 
     # return false if there is still empty positions
     for row in board:
         for cell in row:
             if cell == EMPTY:
                 return False
             
-    #If there is no winner, and all positions are occupied return True(Game Over)
+    # If there is no winner, and all positions are occupied return True(Game Over)
     return True
 
 
@@ -130,20 +143,67 @@ def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
-    # return 1 if X won
-    if winner(board) == X:
+    # returns 0 if there are no winners
+    if winner(board) == None:
+        return 0
+    # return 1 if X wins
+    elif winner(board) == X:
         return 1
-    
-    # return -1 if O won
-    if winner(board) == O:
+    # or -1 if O wins
+    else:
         return -1
-    
-    # return 0 if none of the previous conditions was met
-    return 0
 
 
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    # return none if the game has ended
+    if terminal(board):
+        return None
+    
+    # bool variable to store who's turn it is
+    is_max_player = player(board) == X
+
+    # initialize a moves dictionary, that will store all possible actions and their value
+    moves_dict = {}
+
+    # iterate trough every possible action and call get_move_utility
+    for action in actions(board):
+        moves_dict[action] = get_move_utility(result(board, action), not is_max_player)
+
+    # initialize the target value for the minimax loop - oposite to target
+    target_value = -math.inf if is_max_player else math.inf
+
+    # set target_value to be the best value the player can reach
+    for val in moves_dict.values():
+        target_value = max(target_value, val) if is_max_player else min(target_value, val)
+
+    # filter out the keys that cant reach optimal results
+    matching_keys = [k for k, v in moves_dict.items() if v == target_value]
+
+    # added some variation when picking from the best possible moves
+    return random.choice(matching_keys)
+
+
+# get the utility for each possible move
+def get_move_utility(state, is_max_player):
+
+    # return utility if state is terminal
+    if terminal(state):
+        return utility(state)
+
+    # initialize v to positive or negative infinity
+    value = -math.inf if is_max_player else math.inf
+
+    # iterate recursively trough every possible action for a given state
+    for action in actions(state):
+
+        # recursive function call, inverting is_max_player
+        child_value = get_move_utility(result(state, action), not is_max_player)
+
+        # keep track of the best result
+        value = max(value, child_value) if is_max_player else min(value, child_value)
+
+    # return the value for the given state
+    return value
