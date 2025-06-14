@@ -66,7 +66,7 @@ def result(board, action):
         raise Exception('There are no possible actions')
     
     # raise exception if action is out of bounds
-    if action[0] < 0 or action[0] < 0 or action[0] > 2 or action[1] > 2:
+    if action[0] < 0 or action[1] < 0 or action[0] > 2 or action[1] > 2:
         raise Exception('Action out of bounds')
     
     # raise exception if action points to a 'busy' cell
@@ -193,7 +193,7 @@ def get_move_utility(state, is_max_player):
     if terminal(state):
         return utility(state)
 
-    # initialize v to positive or negative infinity
+    # initialize value to positive or negative infinity
     value = -math.inf if is_max_player else math.inf
 
     # iterate recursively trough every possible action for a given state
