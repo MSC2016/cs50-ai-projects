@@ -218,7 +218,6 @@ class MinesweeperAI():
         Returns a list of all valid neighbours for given cell.
 
         """
-        print('Height:', self.height, 'Width:', self.width, 'Cell:', cell)
         i, j = cell
         valid_neighbours = set()
         for line in range(i - 1, i + 2):
