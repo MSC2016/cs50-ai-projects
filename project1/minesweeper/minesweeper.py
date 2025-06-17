@@ -247,7 +247,9 @@ class MinesweeperAI():
                 if (i,j) not in self.moves_made and (i,j) not in self.mines:
                     possible_moves.append((i,j))
 
-        return random.choice(possible_moves)
+        if possible_moves:
+            return random.choice(possible_moves)
+        return None
         #raise NotImplementedError
     
     def get_valid_neighbours(self, cell):
@@ -266,7 +268,7 @@ class MinesweeperAI():
                 elif line < 0 or col < 0 :
                     continue
                 # ignore values above height and width (out of bounds)
-                elif line > self.width - 1 or col > self.height-1:
+                elif line >= self.height or col >= self.width:
                     continue
                 else:
                     # add what remains to the valid neighbours set
