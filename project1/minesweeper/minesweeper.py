@@ -105,27 +105,46 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        raise NotImplementedError
+        
+        if len(self.cells) == self.count and self.count > 0:
+            print('known_mines', self.cells)
+            return self.cells.copy()
+        print('known_mines', set())
+        return set()
+        #raise NotImplementedError
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        raise NotImplementedError
+        if self.count == 0:
+            print('known_safes', self.cells)
+            return self.cells.copy()
+        print('known_safes', set())
+        return set()
+        #raise NotImplementedError
 
     def mark_mine(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        raise NotImplementedError
+        if cell in self.cells and self.count > 0:
+            self.count -= 1
+            self.cells.remove(cell)
+        print('mark_mine', cell)
+        #raise NotImplementedError
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        raise NotImplementedError
+
+        if cell in self.cells:
+            self.cells.remove(cell)
+        print('mark_safe', cell)
+        #raise NotImplementedError
 
 
 class MinesweeperAI():
@@ -166,6 +185,7 @@ class MinesweeperAI():
         self.safes.add(cell)
         for sentence in self.knowledge:
             sentence.mark_safe(cell)
+        print(self.safes)
 
     def add_knowledge(self, cell, count):
         """
@@ -182,15 +202,18 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        # mark the cell as a move that has been made
+        # 1) mark the cell as a move that has been made
         self.moves_made.add(cell)
-        # mark the cell as safe
-        self.safes.add(cell)
-        # get a set of all valid cells arround the selected cell
+        # 2) mark the cell as safe
+        self.mark_safe(cell)
+        # 3) add a new sentence to the AI's knowledge base
         neighbours = self.get_valid_neighbours(cell)
-        print(neighbours, cell, count)
+        self.knowledge.append(Sentence(neighbours, count))
 
-
+        #  4) mark any additional cells as safe or as mines
+        if count == 0:
+            for neighbor in neighbours:
+                self.mark_safe(neighbor)
 
     def make_safe_move(self):
         """
@@ -201,7 +224,15 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        raise NotImplementedError
+        print("Known safes:", self.safes)
+
+        # Get list of safe moves
+        possible_moves = list(self.safes - self.moves_made)
+
+        if possible_moves:
+            return random.choice(possible_moves)
+        return None
+        #raise NotImplementedError
 
     def make_random_move(self):
         """
@@ -210,9 +241,15 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        raise NotImplementedError
+        possible_moves = []
+        for i in range(self.height):
+            for j in range(self.width):
+                if (i,j) not in self.moves_made and (i,j) not in self.mines:
+                    possible_moves.append((i,j))
+
+        return random.choice(possible_moves)
+        #raise NotImplementedError
     
-    # 
     def get_valid_neighbours(self, cell):
         """
         Returns a list of all valid neighbours for given cell.
@@ -232,7 +269,7 @@ class MinesweeperAI():
                 elif line > self.width - 1 or col > self.height-1:
                     continue
                 else:
-                    # add what remains to the valis neighbours set
+                    # add what remains to the valid neighbours set
                     valid_neighbours.add((line, col))
         return valid_neighbours
 
