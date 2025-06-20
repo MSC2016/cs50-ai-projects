@@ -267,7 +267,7 @@ class MinesweeperAI():
                     new_sentences.append(new_sentence)
 
             # if there are no new sentences, mark safes and mark mines with update_safes_n_mines()
-            # remove duplicates by calling remove_duplicates(), and break out of the loop
+            # and break out of the loop
             if not new_sentences:
                 self.update_safes_n_mines()
                 break
