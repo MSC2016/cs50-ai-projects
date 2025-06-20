@@ -1,6 +1,8 @@
 import itertools
 import random
 
+DEBUG = False
+
 
 class Minesweeper():
     """
@@ -70,7 +72,7 @@ class Minesweeper():
                 if (i, j) == cell:
                     continue
 
-                # Update count if cell in bounds and is mine
+                # Update count if cell is within game bounds and is a mine
                 if 0 <= i < self.height and 0 <= j < self.width:
                     if self.board[i][j]:
                         count += 1
@@ -110,7 +112,7 @@ class Sentence():
         if len(self.cells) == self.count and self.count > 0:
             return self.cells.copy()
         return set()
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def known_safes(self):
         """
@@ -120,7 +122,7 @@ class Sentence():
         if self.count == 0:
             return self.cells.copy()
         return set()
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def mark_mine(self, cell):
         """
@@ -132,7 +134,7 @@ class Sentence():
         if cell in self.cells and self.count > 0:
             self.count -= 1
             self.cells.remove(cell)
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def mark_safe(self, cell):
         """
@@ -142,7 +144,7 @@ class Sentence():
         # remove the safe cell if it is part of the sentence
         if cell in self.cells:
             self.cells.remove(cell)
-        #raise NotImplementedError
+        # raise NotImplementedError
 
 
 class MinesweeperAI():
@@ -224,47 +226,66 @@ class MinesweeperAI():
 
         for sentence in self.knowledge:
             print('sentence', sentence)
-        print('safes', self.safes)
-        print('mines', self.mines)
-        print('-'*100)
-        #raise NotImplementedError
 
+        if DEBUG:
+            print('safes', self.safes)
+            print('mines', self.mines)
+
+            if len(self.mines) == 8:
+                print('FOUND THEM ALL', end='')
+            print('-'*50)
+        # raise NotImplementedError
 
     def inference_new_knowledge(self):
+        '''
+        Test all sentences in relation to each other, searching for subsets
+        if a subset is found, it creates a new sentence adds it to
+        self.knowldge
+        '''
         while True:
-
             # variable to store new sentences
             new_sentences = []
 
             # search subsets to infer new sentences
             for s1, s2 in itertools.combinations(self.knowledge, 2):
+                # check if s1 is a subset of s2, and if the sentences are different
                 if s1.cells.issubset(s2.cells) and s1.cells != s2.cells:
+                    # if they are, get the difference in cells and count
                     diff = s2.cells - s1.cells
                     count = s2.count - s1.count
+                    # create a new sentence made of the difference between the 2 sentences being tested
                     new_sentence = Sentence(diff, count)
+                # same as the previous if statement, but this time checking if s2 is a subset of s1
                 elif s2.cells.issubset(s1.cells) and s2.cells != s1.cells:
                     diff = s1.cells - s2.cells
                     count = s1.count - s2.count
                     new_sentence = Sentence(diff, count)
                 else:
                     continue
-
+                # if the new sentence is really new, and not already in self,knowledge and new_sentences, add it to self.knowledge
                 if new_sentence.cells and new_sentence not in self.knowledge and new_sentence not in new_sentences:
                     new_sentences.append(new_sentence)
 
-            # if there are no new sentences
-            # and break out of the loop
+            # if there are no new sentences, mark safes and mark mines with update_safes_n_mines()
+            # remove duplicates by calling remove_duplicates(), and break out of the loop
             if not new_sentences:
                 self.update_safes_n_mines()
-                self.remove_duplicates()
                 break
 
-            # Add newly inferred sentences
+            # add new_sentences to self.knowledge, update safes and mines, and remove duplicates
             self.knowledge.extend(new_sentences)
             self.update_safes_n_mines()
-            self.remove_duplicates()
 
     def update_safes_n_mines(self):
+        '''
+        updates the known mines and known safes, using mark_mine()
+        and mark_safe() functions, and remove sentences with empty
+        sets from self.knowledge
+        '''
+        # refference all sentences in self.knowledge, and foe each sentence
+        # if the count is equal to the number of mines, mark all cells in
+        # the sentence as mines, if the count is zero, mark all cells in the
+        # sentence as safe
         for sentence in self.knowledge:
             if len(sentence.cells) == sentence.count:
                 for cell in sentence.cells.copy():
@@ -273,11 +294,17 @@ class MinesweeperAI():
                 for cell in sentence.cells.copy():
                     self.mark_safe(cell)
 
-    def remove_duplicates(self):
+        # create an empty list
         unique = []
+        # iterate trough all sentences in self.knowledge
         for s in self.knowledge:
+            # if current sentence's cells and count are not equal to any other
+            # sentence's cells and count already in unique, or if it isd in fact
+            # a new sentence, add it to unique
             if not any(s.cells == u.cells and s.count == u.count for u in unique):
                 unique.append(s)
+        # make self.knowledge equal to unique, for all sentences that contain cells
+        # or in other words, remove sentences with empty sets of cells
         self.knowledge = [s for s in unique if s.cells]
 
     def make_safe_move(self):
@@ -295,7 +322,7 @@ class MinesweeperAI():
         if possible_moves:
             return random.choice(possible_moves)
         return None
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def make_random_move(self):
         """
@@ -311,12 +338,12 @@ class MinesweeperAI():
         # list, randomly select one of them and return it.
         for i in range(self.height):
             for j in range(self.width):
-                if (i,j) not in self.moves_made and (i,j) not in self.mines:
-                    possible_moves.append((i,j))
+                if (i, j) not in self.moves_made and (i, j) not in self.mines:
+                    possible_moves.append((i, j))
         if possible_moves:
             return random.choice(possible_moves)
         return None
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def get_valid_neighbours(self, cell):
         """
@@ -334,7 +361,7 @@ class MinesweeperAI():
                 if line == i and col == j:
                     continue
                 # ignore values below 0 (out of bounds)
-                elif line < 0 or col < 0 :
+                elif line < 0 or col < 0:
                     continue
                 # ignore values above height and width (out of bounds)
                 elif line >= self.height or col >= self.width:
