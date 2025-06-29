@@ -1,7 +1,7 @@
 import itertools
 import random
 
-DEBUG = False
+DEBUG = True
 
 
 class Minesweeper():
@@ -224,10 +224,9 @@ class MinesweeperAI():
         # 5) add any new sentences to the AI's knowledge base
         self.inference_new_knowledge()
 
-        for sentence in self.knowledge:
-            print('sentence', sentence)
-
         if DEBUG:
+            for sentence in self.knowledge:
+                print('sentence', sentence)
             print('safes', self.safes)
             print('mines', self.mines)
 

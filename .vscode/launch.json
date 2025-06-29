@@ -1,0 +1,123 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run minesweeper",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/project1/minesweeper/runner.py",
+            "cwd": "${workspaceFolder}/project1/minesweeper",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },        
+        {
+            "name": "Run knights",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/project1/knights/puzzle.py",
+            "cwd": "${workspaceFolder}/project1/knights",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Tic Tac Toe",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/project0/tictactoe/runner.py",
+            "cwd": "${workspaceFolder}/project0/tictactoe",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Degrees small data set",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/project0/degrees/degrees.py",
+            "args": ["small"],
+            "cwd": "${workspaceFolder}/project0/degrees",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Degrees large data set",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/project0/degrees/degrees.py",
+            "args": ["large"],
+            "cwd": "${workspaceFolder}/project0/degrees",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Maze 1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src0/maze.py",
+            "args": ["maze1.txt"],
+            "cwd": "${workspaceFolder}/src0",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Maze 2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src0/maze.py",
+            "args": ["maze2.txt"],
+            "cwd": "${workspaceFolder}/src0",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run Maze 3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src0/maze.py",
+            "args": ["maze3.txt"],
+            "cwd": "${workspaceFolder}/src0",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run test 1",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/my_tests/test1.py",
+            "args": ["small"],
+            "cwd": "${workspaceFolder}/my_tests",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run test 2",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/my_tests/test2.py",
+            "args": ["small"],
+            "cwd": "${workspaceFolder}/my_tests",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        },
+        {
+            "name": "Run test 3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/my_tests/test3.py",
+            "args": ["small"],
+            "cwd": "${workspaceFolder}/my_tests",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "stopOnEntry": false
+        }
+    ]
+}
