@@ -1,0 +1,14 @@
+{
+  "python.defaultInterpreterPath": "/home/miguel/venvs/cs50-ai-venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.extraPaths": [
+    "./"
+  ],
+  "terminal.integrated.profiles.linux": {
+    "bash (cs50-ai)": {
+      "path": "/bin/bash",
+      "args": ["-c", "source /home/miguel/venvs/cs50-ai-venv/bin/activate && exec bash"]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "bash (cs50-ai)"
+}
